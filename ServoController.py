@@ -1,11 +1,13 @@
+from pynput import mouse
+from pynput.mouse import Button, Controller
+import tkinter
 import RPi.GPIO as GPIO
 import time
 
-#Configure GPIO PINS (5 - yAxis, 7 = xAxis, 12 - laser)
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(5, GPIO.OUT)
-GPIO.setup(7, GPIO.OUT)
-GPIO.setup(12, GPIO.OUT)
+#Get Screen Info
+root = tkinter.Tk()
+SCREEN_WIDTH = root.winfo_screenwidth()
+SCREEN_HEIGHT = root.winfo_screenheight()
 
 #Set Constants
 MIN_DUTY = 1 #UP/RIGHT
@@ -14,14 +16,26 @@ CENTER = MIN_DUTY + (MAX_DUTY-MIN_DUTY) / 2
 ONE_DEGREE = MAX_DUTY / 180
 SLEEP_SPEED = .025
 
-#Setup pin 7 for Pulse width modulation of 50hz
+#Configure GPIO PINS (5 - yAxis, 7 = xAxis, 12 - laser)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(5, GPIO.OUT)
+GPIO.setup(7, GPIO.OUT)
+#GPIO.setup(12, GPIO.OUT) -UNCOMMENT WHEN YOU FIX LASER
+
+#Setup pin 5 and 7 for Pulse width modulation of 50hz
 xAxis = GPIO.PWM(7,50)
 yAxis = GPIO.PWM(5,50)
 
-#Set starting location to CENTER and turn on laser diode 
-xAxis.start(CENTER)
-yAxis.start(CENTER)
-#GPIO.output(12, 1) -UNCOMMENT WHEN YOU FIX LASER
+#Center laser and mouse
+def setup():
+    printHeader("Centering mouse and laser")
+    mouseX = SCREEN_WIDTH/2
+    mouseY = SCREEN_HEIGHT/2
+    mouse = Controller()
+    mouse.position = (mouseX, mouseY) 
+    xAxis.start(CENTER)
+    yAxis.start(CENTER)
+    #GPIO.output(12, 1) -UNCOMMENT WHEN YOU FIX LASER
 
 #Set X and Y duty cycle
 def setDutyCycle(x, y):
@@ -40,6 +54,9 @@ def printHeader(message):
     print(message)
     print("###################################################")
     print("###################################################")
+
+def printScreenSize():
+    print("Height", SCREEN_HEIGHT, "Width", SCREEN_WIDTH)
 
 #Test Y-Axis
 def verticalTest():
@@ -92,6 +109,27 @@ def diagonalTest4():
         setDutyCycle(x, y)
         x = x + ONE_DEGREE
         y = y - ONE_DEGREE
+
+def on_move(x, y):
+    #print('Pointer moved to {0}'.format((x, y)))
+    print(mouseX)
+
+def on_click(x, y, button, pressed):
+    print('{0} at {1}'.format(
+        'Pressed' if pressed else 'Released',
+        (x, y)))
+    if not pressed:
+        # Stop listener
+        return False
+#MAIN
+mouseX = 0
+mouseY = 0
+setup()
+
+with mouse.Listener(
+    on_move=on_move,
+    on_click=on_click) as listener:
+    listener.join()     
         
 try:
     verticalTest()
