@@ -1,12 +1,16 @@
 import ServoController
+import LaserController
+import time
 
 #Assign variables for GPIO pin of peripheral 
 xAxisPin = 7
 yAxisPin = 5
 laserPin = 12
 
+#Create objects for hardware interface
 x = ServoController.Servo(xAxisPin)
 y = ServoController.Servo(yAxisPin)
+laser = LaserController.Laser(laserPin)
 
 #Create a range method for floats
 def frange(start, stop, step):
@@ -23,6 +27,12 @@ def printHeader(message):
         print("###################################################")
         print("###################################################")
 
+def laserTest():
+    printHeader("Laser Test")
+    for i in range(25):
+        laser.toggleLaser()
+        time.sleep(1)
+        
 def horizontalTest():
     printHeader("Horizontal Test")
     y.setDutyCycle(y.MID_DUTY)
@@ -61,9 +71,10 @@ def diagonalTest4():
 
 def main():             
     try:
-#        horizontalTest()
-#        verticalTest()
-#        diagonalTest1()
+        laserTest()
+        horizontalTest()
+        verticalTest()
+        diagonalTest1()
         diagonalTest2()
         diagonalTest3()
         diagonalTest4()
@@ -73,6 +84,9 @@ def main():
         
     except Exception:
         print(Exception)
+        x.end()
+        y.end()
+        laser.end()
         
 if __name__ == "__main__":
     main()

@@ -20,7 +20,7 @@ class Servo:
     SLEEP_SPEED = .025
         
     def __init__(self, pin):
-        GPIO.setmode(GPIO.BOARD)
+#        GPIO.setmode(GPIO.BOARD)
         GPIO.setup(pin, GPIO.OUT)
         servoMotor = GPIO.PWM(int(pin), 50)
         servoMotor.start(self.MID_DUTY)
@@ -30,7 +30,10 @@ class Servo:
         self.servoMotor.ChangeDutyCycle(d)
         print("Duty cycle: ", d)
         time.sleep(self.SLEEP_SPEED)
-
+    
+    def end(self):
+        GPIO.cleanup()
+        
 #        mouseX = SCREEN_WIDTH/2
 #        mouseY = SCREEN_HEIGHT/2
 #        mouse = Controller()
