@@ -27,24 +27,10 @@ def frange(start, stop, step):
     while i < stop:
         yield i
         i += step
-        
-def printHeader(message):
-    bufferTiles = 24 - (int)(len(message)/2) 
-    print("###################################################")
-    print("###################################################")
-    print(bufferTiles*"#",message, bufferTiles*"#")
-    print("###################################################")
-    print("###################################################")
 
 def printStatus():
     print("X:", xAxis.dutyCycle, "Y:", yAxis.dutyCycle)
     laser.printStatus()
-
-#def showGrid():
-#    print("\r",(((xAxis.MAX_DUTY-xAxis.MIN_DUTY) * 2) + 2) * "+")
-#    for i in frange (yAxis.MIN_DUTY, yAxis.MAX_DUTY, .5):
-#        print("\r+", ((xAxis.MAX_DUTY - xAxis.MIN_DUTY) * 2) * " ", "+") 
-#    print("\r", (((xAxis.MAX_DUTY - xAxis.MIN_DUTY) * 2) + 2) * "+")
 
 def mouseTest():
     mouse = Controller()
@@ -56,11 +42,13 @@ def mouseToDuty(mousePosition, servo, screenMax):
 
 def on_move(newx, newy):
     print('Pointer moved to {0}'.format((newx, newy)))
-    #flip x value
     
-    xAxis.setDutyCycle(mouseToDuty(newx, xAxis, SCREEN_WIDTH))
+    #flip x value
+    d = (xAxis.MAX_DUTY+xAxis.MIN_DUTY) - mouseToDuty(newx, xAxis, SCREEN_WIDTH)
+    
+    xAxis.setDutyCycle(d)
     yAxis.setDutyCycle(mouseToDuty(newy, yAxis, SCREEN_HEIGHT))
-#        print(mouseX)
+    printStatus()
 
 def on_click(x, y, button, pressed):
     if button == Button.right:
@@ -77,7 +65,22 @@ with mouse.Listener(
         on_move=on_move,
         on_click=on_click) as listener:
     listener.join()
-    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+         
+def printHeader(message):
+    bufferTiles = 24 - (int)(len(message)/2) 
+    print("###################################################")
+    print("###################################################")
+    print(bufferTiles*"#",message, bufferTiles*"#")
+    print("###################################################")
+    print("###################################################")
+
     
 def laserTest():
     printHeader("Laser Test")
