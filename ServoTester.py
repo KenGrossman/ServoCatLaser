@@ -1,6 +1,14 @@
 import ServoController
 import LaserController
+from pynput import mouse
+from pynput.mouse import Button, Controller
 import time
+import tkinter
+
+#Get Screen Info
+root = tkinter.Tk()
+SCREEN_WIDTH = root.winfo_screenwidth()
+SCREEN_HEIGHT = root.winfo_screenheight()
 
 #Assign variables for GPIO pin of peripheral 
 xAxisPin = 7
@@ -8,9 +16,10 @@ yAxisPin = 5
 laserPin = 12
 
 #Create objects for hardware interface
-x = ServoController.Servo(xAxisPin)
-y = ServoController.Servo(yAxisPin)
+xAxis = ServoController.Servo(xAxisPin)
+yAxis = ServoController.Servo(yAxisPin)
 laser = LaserController.Laser(laserPin)
+#mouse = MouseController.Mouse()
 
 #Create a range method for floats
 def frange(start, stop, step):
@@ -20,57 +29,107 @@ def frange(start, stop, step):
         i += step
         
 def printHeader(message):
-        bufferTiles = 24 - (int)(len(message)/2) 
-        print("###################################################")
-        print("###################################################")
-        print(bufferTiles*"#",message, bufferTiles*"#")
-        print("###################################################")
-        print("###################################################")
+    bufferTiles = 24 - (int)(len(message)/2) 
+    print("###################################################")
+    print("###################################################")
+    print(bufferTiles*"#",message, bufferTiles*"#")
+    print("###################################################")
+    print("###################################################")
 
+def printStatus():
+    print("X:", xAxis.dutyCycle, "Y:", yAxis.dutyCycle)
+    laser.printStatus()
+
+#def showGrid():
+#    print("\r",(((xAxis.MAX_DUTY-xAxis.MIN_DUTY) * 2) + 2) * "+")
+#    for i in frange (yAxis.MIN_DUTY, yAxis.MAX_DUTY, .5):
+#        print("\r+", ((xAxis.MAX_DUTY - xAxis.MIN_DUTY) * 2) * " ", "+") 
+#    print("\r", (((xAxis.MAX_DUTY - xAxis.MIN_DUTY) * 2) + 2) * "+")
+
+def mouseTest():
+    mouse = Controller()
+    
+def mouseToDuty(mousePosition, servo, screenMax):
+    ratio = (screenMax)/(servo.MAX_DUTY - servo.MIN_DUTY)
+    dutyCycle = (mousePosition/ratio) + 1
+    return dutyCycle
+
+def on_move(newx, newy):
+    print('Pointer moved to {0}'.format((newx, newy)))
+    #flip x value
+    
+    xAxis.setDutyCycle(mouseToDuty(newx, xAxis, SCREEN_WIDTH))
+    yAxis.setDutyCycle(mouseToDuty(newy, yAxis, SCREEN_HEIGHT))
+#        print(mouseX)
+
+def on_click(x, y, button, pressed):
+    if button == Button.right:
+        print('{0} at {1}'.format(
+            'Pressed' if pressed else 'Released',
+            (x, y)))
+        if not pressed:
+            # Stop listener
+            return False
+    elif button == Button.left:
+            if pressed:
+                laser.toggleLaser()
+with mouse.Listener(
+        on_move=on_move,
+        on_click=on_click) as listener:
+    listener.join()
+    
+    
 def laserTest():
     printHeader("Laser Test")
     for i in range(25):
         laser.toggleLaser()
-        time.sleep(1)
+        time.sleep(.1)
         
 def horizontalTest():
     printHeader("Horizontal Test")
-    y.setDutyCycle(y.MID_DUTY)
-    for d in frange(x.MIN_DUTY, x.MAX_DUTY, x.ONE_DEGREE):
-        x.setDutyCycle(d)
+    yAxis.setDutyCycle(yAxis.MID_DUTY)
+    for d in frange(xAxis.MIN_DUTY, xAxis.MAX_DUTY, xAxis.ONE_DEGREE):
+        xAxis.setDutyCycle(d)
+        printStatus()
 
 def verticalTest():
     printHeader("Vertical Test")
-    x.setDutyCycle(x.MID_DUTY)
-    for d in frange(y.MIN_DUTY, y.MAX_DUTY, y.ONE_DEGREE):
-        y.setDutyCycle(d)
+    xAxis.setDutyCycle(xAxis.MID_DUTY)
+    for d in frange(yAxis.MIN_DUTY, yAxis.MAX_DUTY, yAxis.ONE_DEGREE):
+        yAxis.setDutyCycle(d)
+        printStatus()
     
 def diagonalTest1():
     printHeader("Q1 to Q3 - Start")
-    for d in frange(y.MIN_DUTY, y.MAX_DUTY, y.ONE_DEGREE):
-        y.setDutyCycle(d)
-        x.setDutyCycle(d)
+    for d in frange(yAxis.MIN_DUTY, yAxis.MAX_DUTY, yAxis.ONE_DEGREE):
+        yAxis.setDutyCycle(d)
+        xAxis.setDutyCycle(d)
+        printStatus()
 
 def diagonalTest2():
     printHeader("Q3 to Q1 - Start")
-    for d in frange(y.MIN_DUTY, y.MAX_DUTY, y.ONE_DEGREE):
-        y.setDutyCycle(y.MAX_DUTY + y.MIN_DUTY - d)
-        x.setDutyCycle(x.MAX_DUTY + x.MIN_DUTY - d)    
+    for d in frange(yAxis.MIN_DUTY, yAxis.MAX_DUTY, yAxis.ONE_DEGREE):
+        yAxis.setDutyCycle(yAxis.MAX_DUTY + yAxis.MIN_DUTY - d)
+        xAxis.setDutyCycle(xAxis.MAX_DUTY + xAxis.MIN_DUTY - d)
+        printStatus()
     
 def diagonalTest3():
     printHeader("Q2 to Q4 - Start")
-    for d in frange(y.MIN_DUTY, y.MAX_DUTY, y.ONE_DEGREE):
-        y.setDutyCycle(d)
-        x.setDutyCycle(x.MAX_DUTY + x.MIN_DUTY - d)   
+    for d in frange(yAxis.MIN_DUTY, yAxis.MAX_DUTY, yAxis.ONE_DEGREE):
+        yAxis.setDutyCycle(d)
+        xAxis.setDutyCycle(xAxis.MAX_DUTY + xAxis.MIN_DUTY - d)
+        printStatus()
         
 def diagonalTest4():
     printHeader("Q4 to Q2 - Start")
-    for d in frange(x.MIN_DUTY, x.MAX_DUTY, x.ONE_DEGREE):
-        y.setDutyCycle(y.MAX_DUTY + y.MIN_DUTY - d)
-        x.setDutyCycle(d)
+    for d in frange(xAxis.MIN_DUTY, xAxis.MAX_DUTY, xAxis.ONE_DEGREE):
+        yAxis.setDutyCycle(yAxis.MAX_DUTY + yAxis.MIN_DUTY - d)
+        xAxis.setDutyCycle(d)
+        printStatus()
 
 def main():             
     try:
+        mouseTest()
         laserTest()
         horizontalTest()
         verticalTest()
@@ -82,11 +141,11 @@ def main():
     except KeyboardInterrupt:
         print("keyboard")
         
-    except Exception:
-        print(Exception)
-        x.end()
-        y.end()
-        laser.end()
+#    except Exception:
+#        print(Exception)
+#        xAxis.end()
+#        yAxis.end()
+#        laser.end()
         
 if __name__ == "__main__":
     main()

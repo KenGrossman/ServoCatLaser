@@ -26,7 +26,11 @@ class Laser:
         self.printStatus()
         
     def printStatus(self):
-        print("Light ON? ", self.power)
+        if self.power:
+            power = "ON"
+        else:
+            power = "OFF"
+        print("Lights", power)
     
     def end(self):
         GPIO.cleanup()
