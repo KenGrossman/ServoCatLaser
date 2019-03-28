@@ -21,5 +21,8 @@ class Servo:
         self.dutyCycle = d
         time.sleep(self.SLEEP_SPEED)
     
+    def center(self):
+        self.setDutyCycle(self.MID_DUTY)
+    
     def end(self):
         GPIO.cleanup()

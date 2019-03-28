@@ -13,12 +13,8 @@ class Laser:
         self.power = not self.power
         self.updateLaser()
     
-    def powerON(self):
-        self.power = True
-        self.updateLaser()
-        
-    def powerOFF(self):
-        self.power = False
+    def setPower(self, flag):
+        self.power = flag
         self.updateLaser()
     
     def updateLaser(self):
@@ -26,10 +22,7 @@ class Laser:
         self.printStatus()
         
     def printStatus(self):
-        if self.power:
-            power = "ON"
-        else:
-            power = "OFF"
+        power = "ON" if self.power else "OFF"
         print("Lights", power)
     
     def end(self):
