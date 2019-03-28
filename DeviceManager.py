@@ -18,7 +18,7 @@ laserPin = 12
 xAxis = ServoController.Servo(xAxisPin)
 yAxis = ServoController.Servo(yAxisPin)
 laser = LaserController.Laser(laserPin)
-#mouse = MouseController.Mouse()
+##mouse = MouseController.Mouse()
 
 def printStatus():
     print("X:", xAxis.dutyCycle, "Y:", yAxis.dutyCycle)
