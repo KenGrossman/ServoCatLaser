@@ -16,9 +16,9 @@ def printHeader(message):
     print("###################################################")
     print("###################################################")
 
-def mouseTest():
-    printHeader("Mouse Test")
-    dm.mouse.Listener
+#def mouseTest():
+#    printHeader("Mouse Test")
+#    dm.mouse.Listener
     
 def laserTest():
     printHeader("Laser Test")
@@ -79,12 +79,12 @@ def main():             #        laserTest()
         print("hello")
 #        mouseTest()
 #        laserTest()
-#        horizontalTest()
-#        verticalTest()
-#        diagonalTest1()
-#        diagonalTest2()
-#        diagonalTest3()
-#        diagonalTest4()
+        horizontalTest()
+        verticalTest()
+        diagonalTest1()
+        diagonalTest2()
+        diagonalTest3()
+        diagonalTest4()
         
     except KeyboardInterrupt:
         print("keyboard")
