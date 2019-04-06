@@ -16,10 +16,6 @@ def printHeader(message):
     print("###################################################")
     print("###################################################")
 
-#def mouseTest():
-#    printHeader("Mouse Test")
-#    dm.mouse.Listener
-    
 def laserTest():
     printHeader("Laser Test")
     for i in range(25):
@@ -68,17 +64,10 @@ def diagonalTest4():
         xAxis.setDutyCycle(d)
     printStatus()
 
-def main():             #        laserTest()
-#        horizontalTest()
-#        verticalTest()
-#        diagonalTest1()
-#        diagonalTest2()
-#        diagonalTest3()
-#        diagonalTest4()
+def main():
     try:
         print("hello")
-#        mouseTest()
-#        laserTest()
+        laserTest()
         horizontalTest()
         verticalTest()
         diagonalTest1()
@@ -91,9 +80,6 @@ def main():             #        laserTest()
         
     except Exception:
         print(Exception)
-#        xAxis.end()
-#        yAxis.end()
-#        laser.end()
         
 if __name__ == "__main__":
     main()
