@@ -23,6 +23,9 @@ class Servo:
     
     def center(self):
         self.setDutyCycle(self.MID_DUTY)
+
+    def getRange(self):
+        return (self.MAX_DUTY - self.MIN_DUTY)
     
     def end(self):
         GPIO.cleanup()
