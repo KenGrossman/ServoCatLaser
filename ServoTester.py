@@ -38,71 +38,28 @@ def verticalTest():
     
 #startQuadrant should be 1-4
 def diagonalTest(startQuadrant):
-    printHeader("Diagonal Test Q%0 - Q%1").format(startQ, endQ)
+    printHeader("Diagonal Test Q{0} - Q{1}".format(startQuadrant, startQuadrant + 2 if startQuadrant < 3 else startQuadrant -2))
     
-    xReverse = false
-    yReverse = false
-
-    if(startQuadrant == 1):
-        xReverse = false
-        yReverse = false        
-    elif(startQuadrant == 2):
-        xReverse = true
-        yReverse = false        
-    elif(startQuadrant == 3):
-        xReverse = true
-        yReverse = true        
-    elif(startQuadrant == 4):
-        xReverse = false
-        yReverse = true        
+    #Set reversal boolean based on Start Quadrant
+    xReverse = False if startQuadrant == 1 or startQuadrant == 4 else True
+    yReverse = False if startQuadrant == 1 or startQuadrant == 2 else True
 
     for d in frange(dm.xAxis.MIN_DUTY, dm.xAxis.MAX_DUTY, dm.xAxis.ONE_DEGREE):
-        dm.xAxis.setDutyCycle(d if not modified else (dm.xAxis.getRange() - d))
-        dm.yAxis.setDutyCycle(d if not modified else (dm.yAxis.getRange() - d))
-        printStatus()
-
-# def diagonalTest1():
-#     printHeader("Q1 to Q3 - Start")
-#     for d in frange(yAxis.MIN_DUTY, yAxis.MAX_DUTY, yAxis.ONE_DEGREE):
-#         dm.yAxis.setDutyCycle(d if !modified else (dm.yAxis.getRange() - d))
-#         xAxis.setDutyCycle(d)
-#         printStatus()
-
-# def diagonalTest2():
-#     printHeader("Q3 to Q1 - Start")
-#     for d in frange(yAxis.MIN_DUTY, yAxis.MAX_DUTY, yAxis.ONE_DEGREE):
-#         yAxis.setDutyCycle(yAxis.MAX_DUTY + yAxis.MIN_DUTY - d)
-#         xAxis.setDutyCycle(xAxis.MAX_DUTY + xAxis.MIN_DUTY - d)
-#         printStatus()
-    
-# def diagonalTest3():
-#     printHeader("Q2 to Q4 - Start")
-#     for d in frange(yAxis.MIN_DUTY, yAxis.MAX_DUTY, yAxis.ONE_DEGREE):
-#         yAxis.setDutyCycle(d)
-#         xAxis.setDutyCycle(xAxis.MAX_DUTY + xAxis.MIN_DUTY - d)
-#         printStatus()
-        
-# def diagonalTest4():
-#     printHeader("Q4 to Q2 - Start")
-#     for d in frange(xAxis.MIN_DUTY, xAxis.MAX_DUTY, xAxis.ONE_DEGREE):
-#         yAxis.setDutyCycle(yAxis.MAX_DUTY + yAxis.MIN_DUTY - d)
-#         xAxis.setDutyCycle(d)
-#     printStatus()
+        dm.xAxis.setDutyCycle(d if xReverse == False else dm.xAxis.MAX_DUTY + dm.xAxis.MIN_DUTY - d)
+        dm.yAxis.setDutyCycle(d if yReverse == False else dm.yAxis.MAX_DUTY + dm.yAxis.MIN_DUTY - d)
+        dm.printStatus()
 
 def main():
     try:
-        print("hello")
-        laserTest()
-        horizontalTest()
-        verticalTest()
-        diagonalTest(1)
-        diagonalTest(2)
-        diagonalTest(3)
-        diagonalTest(4)
-        # diagonalTest1()
-        # diagonalTest2()
-        # diagonalTest3()
-        # diagonalTest4()
+        while(True):
+            laserTest()
+            horizontalTest()
+            verticalTest()
+            
+            diagonalTest(1)
+            diagonalTest(2)
+            diagonalTest(3)
+            diagonalTest(4)
         
     except KeyboardInterrupt:
         print("keyboard")

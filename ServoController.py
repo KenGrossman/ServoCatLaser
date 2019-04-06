@@ -8,7 +8,7 @@ class Servo:
     MAX_DUTY = 10 #DOWN/LEFT
     MID_DUTY = MIN_DUTY + (MAX_DUTY-MIN_DUTY) / 2
     ONE_DEGREE = (MAX_DUTY-MIN_DUTY) / 180
-    SLEEP_SPEED = .0
+    SLEEP_SPEED = .025
         
     def __init__(self, pin):
         GPIO.setup(pin, GPIO.OUT)

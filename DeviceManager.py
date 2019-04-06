@@ -19,7 +19,8 @@ laser = LaserController.Laser(laserPin)
 ##mouse = MouseController.Mouse()
 
 def printStatus():
-    print("X:", xAxis.dutyCycle, "Y:", yAxis.dutyCycle)
+    print("X: {0:.2f} Y: {1:.2f}".format(xAxis.dutyCycle, yAxis.dutyCycle))
+    #print("X:", xAxis.dutyCycle, "Y:", yAxis.dutyCycle)
     laser.printStatus()
 
 def printBETTERPRINTMETHOD():
