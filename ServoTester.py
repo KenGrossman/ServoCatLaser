@@ -57,8 +57,8 @@ def diagonalTest(startQuadrant):
         yReverse = true        
 
     for d in frange(dm.xAxis.MIN_DUTY, dm.xAxis.MAX_DUTY, dm.xAxis.ONE_DEGREE):
-        dm.xAxis.setDutyCycle(d if !modified else (dm.xAxis.getRange() - d))
-        dm.yAxis.setDutyCycle(d if !modified else (dm.yAxis.getRange() - d))
+        dm.xAxis.setDutyCycle(d if not modified else (dm.xAxis.getRange() - d))
+        dm.yAxis.setDutyCycle(d if not modified else (dm.yAxis.getRange() - d))
         printStatus()
 
 # def diagonalTest1():
