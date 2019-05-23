@@ -35,6 +35,10 @@ def verticalTest():
     for d in frange(dm.yAxis.MIN_DUTY, dm.yAxis.MAX_DUTY, dm.yAxis.ONE_DEGREE):
         dm.yAxis.setDutyCycle(d)
         dm.printStatus()
+
+#def boundsTest():
+#    for d in frange(-5, 15, dm.xAxis.ONE_DEGREE):
+#	dm.xAxis.setDutyCycle(d)
     
 #startQuadrant should be 1-4
 def diagonalTest(startQuadrant):
@@ -44,6 +48,7 @@ def diagonalTest(startQuadrant):
     xReverse = False if startQuadrant == 1 or startQuadrant == 4 else True
     yReverse = False if startQuadrant == 1 or startQuadrant == 2 else True
 
+    #TODO: Reword this loop and maybe above variables to be more readable
     for d in frange(dm.xAxis.MIN_DUTY, dm.xAxis.MAX_DUTY, dm.xAxis.ONE_DEGREE):
         dm.xAxis.setDutyCycle(d if xReverse == False else dm.xAxis.MAX_DUTY + dm.xAxis.MIN_DUTY - d)
         dm.yAxis.setDutyCycle(d if yReverse == False else dm.yAxis.MAX_DUTY + dm.yAxis.MIN_DUTY - d)
@@ -55,11 +60,8 @@ def main():
             laserTest()
             horizontalTest()
             verticalTest()
-            
-            diagonalTest(1)
-            diagonalTest(2)
-            diagonalTest(3)
-            diagonalTest(4)
+            for i in range (1, 4):
+                diagonalTest(i)
         
     except KeyboardInterrupt:
         print("keyboard")

@@ -17,6 +17,8 @@ class Servo:
         self.servoMotor = servoMotor
         
     def setDutyCycle(self, d):
+        d = d if d >= self.MIN_DUTY else self.MIN_DUTY
+        d = d if d <= self.MAX_DUTY else self.MAX_DUTY
         self.servoMotor.ChangeDutyCycle(d)
         self.dutyCycle = d
         time.sleep(self.SLEEP_SPEED)
