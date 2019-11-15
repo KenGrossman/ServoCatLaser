@@ -55,11 +55,8 @@ def main():
             laserTest()
             horizontalTest()
             verticalTest()
-            
-            diagonalTest(1)
-            diagonalTest(2)
-            diagonalTest(3)
-            diagonalTest(4)
+            for i in range(1, 4)
+                diagonalTest(i)
         
     except KeyboardInterrupt:
         print("keyboard")
